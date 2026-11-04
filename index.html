@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d1729">
+  <meta name="description" content="Доставка песка, щебня, ПГС и других сыпучих материалов. Онлайн-калькулятор стоимости.">
+  <title>Доставка сыпучих материалов</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="site-config.js"></script>
+</head>
+<body>
+  <div id="backendNotice" class="system-notice" hidden>Демонстрационный режим: подключите базу данных перед публикацией клиентского сайта.</div>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#top" aria-label="На главную">
+        <span class="brand-mark" aria-hidden="true">🚛</span>
+        <span class="brand-copy"><strong id="brandName">Название компании</strong><small id="brandTagline">Доставка по городу и району</small></span>
+      </a>
+      <a id="headerPhone" class="phone-button" href="tel:+70000000000"><span aria-hidden="true">☎</span><span id="headerPhoneText">Позвонить</span></a>
+    </div>
+  </header>
+
+  <main id="top" class="page-shell">
+    <section class="hero panel">
+      <div class="hero-copy">
+        <span class="eyebrow">ПРЯМЫЕ ПОСТАВКИ · БЕЗ ЛИШНИХ ПОСРЕДНИКОВ</span>
+        <h1 id="heroTitle">Доставка сыпучих материалов</h1>
+        <p id="heroText">Рассчитайте примерную стоимость онлайн и отправьте заявку удобным способом.</p>
+        <a class="button button-primary hero-cta" href="#calculator">Рассчитать стоимость <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero-photo-wrap"><img id="heroPhoto" src="assets/default-hero.jpg" alt="Самосвал для доставки материалов"><span>Доставка на ваш объект</span></div>
+    </section>
+
+    <section id="calculator" class="calculator panel">
+      <div class="section-heading"><div><span class="section-kicker">ОНЛАЙН-КАЛЬКУЛЯТОР</span><h2>Рассчитайте стоимость доставки</h2></div><span class="live-label"><i></i> Предварительный расчёт</span></div>
+      <div class="calculator-grid">
+        <div class="calculator-controls">
+          <section class="control-section">
+            <div class="field-heading"><h3>1. Выберите материал</h3><span id="densityBadge" class="density-badge">Плотность —</span></div>
+            <div id="materialGrid" class="material-grid" aria-live="polite"></div>
+          </section>
+          <section class="control-section">
+            <div class="field-heading"><h3>2. Количество</h3><div class="mode-switch"><button id="weightModeBtn" class="mode-button active" type="button">Тонны</button><button id="areaModeBtn" class="mode-button" type="button">По площади</button></div></div>
+            <div id="weightPanel" class="weight-panel">
+              <div class="tonnage-top"><div><strong id="tonsValue">10</strong><span> тонн</span><small id="cubesValue">≈ 6,7 м³</small></div><div class="quick-tonnage"><button type="button" data-tons="3">3 т</button><button type="button" data-tons="5">5 т</button><button type="button" data-tons="10" class="selected">10 т</button><button type="button" data-tons="15">15 т</button><button type="button" data-tons="25">25 т</button></div></div>
+              <input id="tonsRange" class="range" type="range" min="1" max="30" value="10" step="1" aria-label="Количество тонн">
+            </div>
+            <div id="areaPanel" class="area-panel" hidden>
+              <label>Длина, м<input id="areaLength" type="number" min="0.5" max="200" step="0.5" value="6"></label>
+              <label>Ширина, м<input id="areaWidth" type="number" min="0.5" max="200" step="0.5" value="4"></label>
+              <label>Слой, см<input id="areaDepth" type="number" min="1" max="150" step="1" value="15"></label>
+              <p id="areaResult" class="area-result">Площадь и масса будут рассчитаны автоматически.</p>
+            </div>
+          </section>
+          <section class="control-section location-fields">
+            <label class="field-label" for="zoneSelect">3. Район доставки<select id="zoneSelect"></select></label>
+            <label class="field-label" for="gateSelect">Условия заезда<select id="gateSelect"><option value="normal">Обычный заезд</option><option value="narrow">Узкие ворота / небольшой самосвал</option><option value="side">Нужна боковая выгрузка</option></select></label>
+          </section>
+        </div>
+
+        <aside class="order-card">
+          <div class="selected-product">
+            <img id="summaryPhoto" src="assets/default-sand.jpg" alt="Выбранный материал">
+            <div class="selected-product-copy"><div class="selected-meta"><span class="payment-badge">Оплата при выгрузке</span><span id="summaryQuantity">10 т</span></div><h3 id="summaryMaterial">Песок речной</h3><p id="summaryTruck">Подходящий самосвал будет подобран автоматически</p><small id="summaryTruckNote"></small></div>
+          </div>
+          <div class="price-breakdown">
+            <div><span id="materialRate">Материал:</span><strong id="materialCost">—</strong></div>
+            <div><span id="deliveryRate">Доставка:</span><strong id="deliveryCost">—</strong></div>
+            <div class="total-row"><span>Примерная цена</span><strong id="totalPrice">—</strong></div>
+            <p>Итоговую стоимость подтвердит менеджер с учётом адреса и подъезда к месту выгрузки.</p>
+          </div>
+          <form id="orderForm" class="order-form" novalidate>
+            <div class="form-row">
+              <label>Дата доставки *<input id="deliveryDate" type="date" required></label>
+              <label>Удобное время<select id="deliveryTime"><option value="">По согласованию</option><option>Утром (08:00–12:00)</option><option>Днём (12:00–16:00)</option><option>Вечером (16:00–20:00)</option></select></label>
+            </div>
+            <label>Ваш номер телефона *<input id="customerPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (9__) ___-__-__" maxlength="18" required></label>
+            <p id="phoneError" class="form-error" hidden></p>
+            <label>Адрес, СНТ или ориентир<input id="customerAddress" type="text" maxlength="160" placeholder="Например: п. Пригородный, ул. Центральная"></label>
+            <button id="geoButton" class="text-button" type="button">📍 Прикрепить геолокацию участка</button>
+            <div class="messenger-choice" id="messengerChoice"><span>Куда отправить заявку:</span><div><button id="maxChoice" class="messenger-button active" type="button">MAX</button><button id="telegramChoice" class="messenger-button" type="button">Telegram</button></div></div>
+            <button class="button button-primary submit-button" type="submit">Подготовить заявку <span aria-hidden="true">→</span></button>
+          </form>
+          <div id="orderResult" class="order-result" hidden><strong>Заявка подготовлена</strong><p id="orderMessage"></p><div class="result-actions"><a id="openMessenger" class="button button-success" href="#" target="_blank" rel="noopener noreferrer">Открыть мессенджер</a><button id="copyMessage" type="button" class="button button-muted">Скопировать</button></div><small>Проверьте текст и нажмите «Отправить» в открывшемся приложении. Сайт не заявляет, что сообщение уже доставлено.</small></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="details-panel panel">
+      <button id="detailsToggle" class="details-toggle" type="button" aria-expanded="false"><span><small>ДОПОЛНИТЕЛЬНАЯ ИНФОРМАЦИЯ</small><strong>Материалы, техника и условия доставки</strong></span><span id="detailsChevron" aria-hidden="true">＋</span></button>
+      <div id="detailsBody" class="details-body" hidden>
+        <!-- Сначала автопарк, затем материалы -->
+        <div><h2>Наш автопарк</h2><div id="fleetGrid" class="fleet-grid"></div></div>
+        <div><h2>Материалы</h2><div id="catalogGrid" class="catalog-grid"></div></div>
+        <div class="service-note"><strong>Как рассчитывается стоимость</strong><p>Калькулятор показывает ориентировочную стоимость. Тариф и возможность подачи конкретной машины уточняются после проверки адреса и условий подъезда.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div><span>© <strong id="footerBrand">Компания</strong></span><span id="footerCity">Доставка по городу и району</span></div><a href="admin.html" rel="nofollow">Вход для владельца</a></footer>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

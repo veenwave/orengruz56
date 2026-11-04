@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d1729">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Панель владельца</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="site-config.js"></script>
+</head>
+<body class="admin-page">
+  <main class="admin-wrap">
+    <header class="admin-top"><div><h1 id="adminCompany">Панель владельца</h1><p>Управление материалами, ценами, фотографиями и автопарком</p></div><a class="admin-secondary" href="index.html">← На сайт</a></header>
+    <div id="configWarning" class="admin-config-warning hidden">Сначала заполните параметры Supabase в файле site-config.js и выполните SQL-настройку из папки supabase.</div>
+    <section id="loginCard" class="admin-card admin-login">
+      <h2>Вход владельца</h2><p>Войдите по выданным администратором адресу электронной почты и паролю. Самостоятельная регистрация закрыта.</p>
+      <form id="loginForm">
+        <div class="admin-field"><label for="emailInput">Электронная почта</label><input id="emailInput" type="email" autocomplete="username" required placeholder="name@example.com"></div>
+        <div class="admin-field"><label for="passwordInput">Пароль</label><input id="passwordInput" type="password" autocomplete="current-password" required placeholder="Пароль от панели"></div>
+        <button class="admin-primary" type="submit" style="width:100%">Войти в панель</button>
+      </form>
+      <p id="loginStatus" class="admin-status" role="status"></p>
+    </section>
+
+    <section id="dashboard" class="hidden">
+      <div class="admin-card" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><strong id="signedInEmail"></strong><p class="admin-help">Изменения сохраняются в общей базе и появляются на сайте после обновления страницы.</p></div><button id="logoutButton" class="admin-secondary" type="button">Выйти</button></div>
+      <div class="admin-card">
+        <h2 style="font-size:14px;margin:0 0 10px">Безопасность аккаунта</h2>
+        <form id="changePasswordForm" class="admin-item-fields">
+          <div class="admin-field"><label for="newPasswordInput">Новый пароль (не менее 10 символов)</label><input id="newPasswordInput" type="password" autocomplete="new-password" minlength="10" required placeholder="Придумайте новый пароль"></div>
+          <div class="admin-field" style="align-self:end"><button class="admin-primary" type="submit">Изменить пароль</button></div>
+        </form>
+        <p id="passwordStatus" class="admin-status" role="status" aria-live="polite"></p>
+      </div>
+      <nav class="admin-tabs" aria-label="Разделы панели"><button class="admin-tab active" data-tab="materials" type="button">Материалы и цены</button><button class="admin-tab" data-tab="trucks" type="button">Автопарк</button><button class="admin-tab" data-tab="zones" type="button">Доставка по районам</button></nav>
+      <section id="materialsTab" class="admin-card">
+        <div class="admin-section-title"><h2>Материалы на сайте</h2></div>
+        <p class="admin-help">Меняйте название, описание, цену за тонну, плотность и фотографию. Снимите галочку «Показывать», чтобы временно скрыть материал с сайта.</p>
+        <div id="materialsList" class="admin-list"></div>
+        <hr style="border:0;border-top:1px solid #edf0f4;margin:22px 0">
+        <h3 style="font-size:14px;margin:0 0 12px">Добавить материал</h3>
+        <form id="addMaterialForm" class="admin-item-fields">
+          <div class="admin-field"><label for="newMaterialName">Название</label><input id="newMaterialName" maxlength="90" required placeholder="Например, Отсев гранитный"></div>
+          <div class="admin-field"><label for="newMaterialPrice">Цена за тонну, ₽</label><input id="newMaterialPrice" type="number" min="1" max="10000000" step="1" value="550" required></div>
+          <div class="admin-field"><label for="newMaterialDensity">Плотность, т/м³</label><input id="newMaterialDensity" type="number" min="0.1" max="10" step="0.01" value="1.4" required></div>
+          <div class="admin-field"><label for="newMaterialDescription">Описание</label><input id="newMaterialDescription" maxlength="240" placeholder="Для дорожек, подушки и т. п."></div>
+          <div class="admin-field wide"><label for="newMaterialPhoto">Фотография (JPG, PNG или WebP, до 5 МБ)</label><input id="newMaterialPhoto" type="file" accept="image/jpeg,image/png,image/webp"></div>
+          <div class="wide"><button class="admin-primary" type="submit">+ Добавить материал</button></div>
+        </form>
+      </section>
+      <section id="trucksTab" class="admin-card hidden">
+        <div class="admin-section-title"><h2>Автопарк техники</h2></div>
+        <p class="admin-help">У каждой машины можно менять название, описание, грузоподъёмность, тип тарифа и фотографию.</p>
+        <div id="trucksList" class="admin-list"></div>
+        <hr style="border:0;border-top:1px solid #edf0f4;margin:22px 0">
+        <h3 style="font-size:14px;margin:0 0 12px">Добавить технику</h3>
+        <form id="addTruckForm" class="admin-item-fields">
+          <div class="admin-field"><label for="newTruckName">Название</label><input id="newTruckName" maxlength="90" required placeholder="Например, КамАЗ 20 т"></div>
+          <div class="admin-field"><label for="newTruckCapacity">Грузоподъёмность, т</label><input id="newTruckCapacity" type="number" min="1" max="100" step="1" value="15" required></div>
+          <div class="admin-field"><label for="newTruckClass">Тарифная категория</label><select id="newTruckClass"><option value="small">Малый самосвал</option><option value="medium" selected>Средний самосвал</option><option value="large">Большой самосвал</option></select></div>
+          <div class="admin-field"><label for="newTruckBasePrice">Базовая подача, ₽</label><input id="newTruckBasePrice" type="number" min="0" max="10000000" value="2500" required></div>
+          <label class="admin-help wide"><input id="newTruckSideUnload" type="checkbox"> Машина умеет выполнять боковую выгрузку</label>
+          <div class="admin-field wide"><label for="newTruckDescription">Описание</label><input id="newTruckDescription" maxlength="240" placeholder="Габариты, тип выгрузки, особенности"></div>
+          <div class="admin-field wide"><label for="newTruckPhoto">Фотография (JPG, PNG или WebP, до 5 МБ)</label><input id="newTruckPhoto" type="file" accept="image/jpeg,image/png,image/webp"></div>
+          <div class="wide"><button class="admin-primary" type="submit">+ Добавить технику</button></div>
+        </form>
+      </section>
+      <section id="zonesTab" class="admin-card hidden">
+        <div class="admin-section-title"><h2>Тарифы доставки по районам</h2></div>
+        <p class="admin-help">Укажите стоимость подачи для трёх классов самосвалов. Эти цифры используются калькулятором на сайте.</p>
+        <div id="zonesList"></div>
+        <hr style="border:0;border-top:1px solid #edf0f4;margin:22px 0">
+        <h3 style="font-size:14px;margin:0 0 12px">Добавить район доставки</h3>
+        <form id="addZoneForm" class="admin-item-fields">
+          <div class="admin-field wide"><label for="newZoneName">Название района</label><input id="newZoneName" maxlength="90" required placeholder="Например, посёлок Пригородный"></div>
+          <div class="admin-field"><label for="newZoneSmall">Малый самосвал, ₽</label><input id="newZoneSmall" type="number" min="0" max="10000000" step="100" value="2000" required></div>
+          <div class="admin-field"><label for="newZoneMedium">Средний самосвал, ₽</label><input id="newZoneMedium" type="number" min="0" max="10000000" step="100" value="2500" required></div>
+          <div class="admin-field"><label for="newZoneLarge">Большой самосвал, ₽</label><input id="newZoneLarge" type="number" min="0" max="10000000" step="100" value="4000" required></div>
+          <div class="wide"><button class="admin-primary" type="submit">+ Добавить район</button></div>
+        </form>
+      </section>
+      <p id="dashboardStatus" class="admin-status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
