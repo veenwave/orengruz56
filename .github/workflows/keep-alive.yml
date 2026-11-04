@@ -1,0 +1,16 @@
+name: Keep Supabase Awake
+
+on:
+  schedule:
+    - cron: '0 8 */3 * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase Database
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" \
+            "https://mmlgatsvoocjuibuvzuh.supabase.co/rest/v1/materials?select=id&limit=1" \
+            -H "apikey: sb_publishable_REi6KTjLuobHDr2Du7_SpA_pWQApO-v"
